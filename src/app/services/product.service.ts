@@ -20,6 +20,15 @@ export class ProductService {
       .pipe(map((response) => response._embedded.products));
   }
 
+
+  getProductListPaginate(thePager: number,
+                         thePageSize: number,
+                         theCategoryId: number): Observable<GetResponse> {
+    const searchUrl = `${BASE_URL}/search/findByCategoryId?id=${theCategoryId}&page=${thePager}&size=${thePageSize}`;
+    return this.http.get<GetResponse>(searchUrl);
+  }
+
+
   // Product Category
   getProductCategories(): Observable<ProductCategory[]> {
     const categoryUrl = `http://localhost:8080/api/product-category`;
@@ -52,6 +61,7 @@ interface GetResponse {
     totalElements: number,
     totalPages: number,
     number: number;
+}
 }
 
 interface GetResponseProductCategory {
