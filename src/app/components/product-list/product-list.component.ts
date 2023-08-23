@@ -19,6 +19,8 @@ export class ProductListComponent implements OnInit {
   thePageSize: number = 5;
   theTotalElements: number = 0;
 
+  previousKeyword: string = "";
+
   constructor(
     private productService: ProductService,
     private route: ActivatedRoute
@@ -72,18 +74,7 @@ export class ProductListComponent implements OnInit {
         this.thePageNumber -1,
         this.thePageSize,
         this.currentCategoryId
-      ).subscribe(
-      (data) => {
-        console.log("data :  "+ data)
-        this.products = data._embedded.products;
-        this.thePageNumber = data.page.number + 1;
-        this.thePageSize = data.page.size;
-        this.theTotalElements = data.page.totalElements;
-      },
-      (err) => {
-        console.log(err);
-      }
-    );
+      ).subscribe(this.processResult());
   }
 
 
@@ -94,15 +85,42 @@ export class ProductListComponent implements OnInit {
   }
 
 
+/*   handleSearchProducts(){
+    const theKeyword: string = this.route.snapshot.paramMap.get('keyword')!;
+    this.productService.searchProducts(theKeyword).subscribe( data => {
+      this.products = data;
+    });
+  }*/
+
 
 
 
   handleSearchProducts(){
     const theKeyword: string = this.route.snapshot.paramMap.get('keyword')!;
-    this.productService.searchProducts(theKeyword).subscribe( data => {
-      this.products = data;
-    });
+
+    if (this.previousKeyword !== theKeyword) {
+      this.thePageNumber = 1;
+    }
+    this.previousKeyword = theKeyword;
+
+    this.productService.searchProductsPagination(
+      this.thePageNumber -1,
+      this.thePageSize,
+      theKeyword).subscribe(this.processResult());
+  }
+
+  private processResult(){
+    return (data: any) => {
+      const { _embedded, page } = data;
+      this.products = _embedded.products;
+      this.thePageNumber = page.number + 1;
+      this.thePageSize = page.size;
+      this.theTotalElements = page.totalElements;
+    };
   }
 
 
+  addToCart(theProduct: Product) {
+    console.log(`Adding To Cart: ${theProduct.name}, ${theProduct.unitPrice}`)
+  }
 }

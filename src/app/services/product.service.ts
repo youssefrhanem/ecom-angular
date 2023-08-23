@@ -44,6 +44,15 @@ export class ProductService {
       .pipe(map(response => response._embedded.products));
   }
 
+
+  searchProductsPagination(thePage: number,
+                           thePageSize: number,
+                           theKeyword: string): Observable<GetResponseProductCategory> {
+    const searchUrl = `${BASE_URL}/search/findByNameContaining?name=${theKeyword}&page=${thePage}&size=${thePageSize}`;
+
+    return this.http.get<GetResponseProductCategory>(searchUrl);
+  }
+
   getProduct(theProductId: number): Observable<Product> {
     return this.http.get<Product>(`${BASE_URL}/${theProductId}`);
   }
@@ -67,5 +76,11 @@ interface GetResponse {
 interface GetResponseProductCategory {
   _embedded: {
     productCategory: ProductCategory[];
+  },
+  page: {
+    size: number,
+    totalElements: number,
+    totalPages: number,
+    number: number;
   };
 }
