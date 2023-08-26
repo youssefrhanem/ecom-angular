@@ -18,10 +18,10 @@ export class CartService {
 
   addToCart(theCartItem: CartItem){
     // check if we already have item in our cart
-   /* let alreadyExistsInCart: boolean = false;
-    let existsCartItem: CartItem = undefined;
+    let alreadyExistsInCart: boolean = false ;
+    let existsCartItem: CartItem | undefined = undefined;
 
-
+/*
     if (this.cartItem.length > 0 ) {
       //  find the item in the cart based on item id
       for (let tempCartItem of this.cartItem){
@@ -35,17 +35,19 @@ export class CartService {
 
       }
 */
-
+    if (this.cartItem.length > 0 ) {
       // Vérifier si l'élément existe déjà dans le panier
-      const existsCartItem =
+
+      existsCartItem =
         this.cartItem.find(
           tempCartItem =>
             tempCartItem.id === theCartItem.id);
 
       // Si existsCartItem n'est pas undefined, cela signifie que l'élément existe déjà
-      const alreadyExistsInCart = existsCartItem !== undefined;
-
+      alreadyExistsInCart = (existsCartItem !== undefined);
+    }
       if (alreadyExistsInCart){
+        // @ts-ignore
         existsCartItem.quantity++;
       } else {
         this.cartItem.push(theCartItem);

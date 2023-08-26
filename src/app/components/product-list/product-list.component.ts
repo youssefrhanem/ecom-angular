@@ -35,12 +35,9 @@ export class ProductListComponent implements OnInit {
     });
     //this.listProducts();
   }
-
   listProducts() {
     this.searchMode = this.route.snapshot.paramMap.has('keyword');
-
     this.searchMode ? this.handleSearchProducts(): this.handleListProducts();
-
   }
 
   handleListProducts() {
@@ -87,16 +84,12 @@ export class ProductListComponent implements OnInit {
     this.listProducts();
   }
 
-
 /*   handleSearchProducts(){
     const theKeyword: string = this.route.snapshot.paramMap.get('keyword')!;
     this.productService.searchProducts(theKeyword).subscribe( data => {
       this.products = data;
     });
   }*/
-
-
-
 
   handleSearchProducts(){
     const theKeyword: string = this.route.snapshot.paramMap.get('keyword')!;
