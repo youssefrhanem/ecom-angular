@@ -7,7 +7,7 @@ import {Subject} from "rxjs";
 })
 export class CartService {
 
-  cartItem: CartItem[] = [];
+  cartItems: CartItem[] = [];
 
   totalPrice: Subject<number> = new Subject<number>();
   totalQuantity: Subject<number> = new Subject<number>();
@@ -35,11 +35,11 @@ export class CartService {
 
       }
 */
-    if (this.cartItem.length > 0 ) {
+    if (this.cartItems.length > 0 ) {
       // Vérifier si l'élément existe déjà dans le panier
 
       existsCartItem =
-        this.cartItem.find(
+        this.cartItems.find(
           tempCartItem =>
             tempCartItem.id === theCartItem.id);
 
@@ -50,7 +50,7 @@ export class CartService {
         // @ts-ignore
         existsCartItem.quantity++;
       } else {
-        this.cartItem.push(theCartItem);
+        this.cartItems.push(theCartItem);
       }
 
       // compute cart total price and total quantity
@@ -59,11 +59,11 @@ export class CartService {
 }
 
 
-  private computeCartTotals() {
+  computeCartTotals() {
     let totalPriceValue: number = 0;
     let totalQuantityValue: number = 0;
 
-    for (let currentCartItem of this.cartItem){
+    for (let currentCartItem of this.cartItems){
       totalPriceValue += currentCartItem.quantity * currentCartItem.unitPrice;
       totalQuantityValue += currentCartItem.quantity;
     }
@@ -78,7 +78,7 @@ export class CartService {
 
   private logCartData(totalPriceValue: number, totalQuantityValue: number) {
     console.log("Content of the Cart");
-    for (let tempCartItem of this.cartItem){
+    for (let tempCartItem of this.cartItems){
       const subTotalPrice = tempCartItem.quantity * tempCartItem.unitPrice;
       console.log(`name: ${tempCartItem.name}, Quantity= ${tempCartItem.quantity},
       unitPeice= ${ tempCartItem.unitPrice}, subTotalPrice= ${subTotalPrice}`);
