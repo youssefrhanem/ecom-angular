@@ -22,16 +22,37 @@
             </td>
             <td>
               <div class="items">
-                <label>Quantity</label> <select>
-                <option>{{tempCartItem.quantity}}</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-              </select>
+                <label>Quantity</label>
+
+                <div class="row no-gutters">
+                  <div class="col">
+                    <button
+                      (click)="incrementQuantity(tempCartItem)"
+                      class="btn btn-primary btn-sm">
+                      <i class="fa fa-plus"></i>
+                    </button>
+                  </div>
+                  <div class="col ml-4 mr-2">
+                    {{tempCartItem.quantity}}
+                  </div>
+
+
+                  <div class="col">
+                    <button
+                      (click)="decrementQuantity(tempCartItem)"
+                      class="btn btn-primary btn-sm">
+                      <i class="fa fa-minus"></i>
+                    </button>
+                  </div>
+
+                  <div class="col-8"></div>
+
+                </div>
+                <p>Sub-total {{tempCartItem.quantity * tempCartItem.unitPrice | currency: 'USD'}}</p>
+                <button (click)="remove(tempCartItem)" class="btn btn-sm btn-primary">Remove</button>
               </div>
-              <p>Sub-total {{tempCartItem.quantity * tempCartItem.unitPrice | currency: 'USD'}}</p>
-              <a href="#" class="primary-btn">Remove</a>
             </td>
+
           </tr>
 
 
@@ -40,7 +61,7 @@
             <td><b>Total Quantity: {{totalQuantity}}</b>
               <p>Shipping FREE</p>
               <b>Total Price: {{totalPrice | currency: 'USD'}}</b><br>
-              <a href="checkout-page.html" class="primary-btn">Checkout</a>
+              <a routerLink="/checkout" class="btn btn-primary">Checkout</a>
             </td>
           </tr>
 
@@ -48,9 +69,9 @@
         <!--        End If-->
       </div>
 
-<!--      if cart is empty display a message -->
+      <!--      if cart is empty display a message -->
       <div *ngIf="cartItem.length == 0" class="alert alert-warning col-md-12" role="alert">
-            Yous Shopping Cart is Empty .
+        Yous Shopping Cart is Empty .
       </div>
 
 

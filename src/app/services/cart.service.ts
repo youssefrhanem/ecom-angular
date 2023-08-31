@@ -60,30 +60,57 @@ export class CartService {
 
 
   computeCartTotals() {
+
     let totalPriceValue: number = 0;
     let totalQuantityValue: number = 0;
 
-    for (let currentCartItem of this.cartItems){
+    for (let currentCartItem of this.cartItems) {
       totalPriceValue += currentCartItem.quantity * currentCartItem.unitPrice;
       totalQuantityValue += currentCartItem.quantity;
     }
-    // publish the new values all subscribers will receive the new data
+
+    // publish the new values ... all subscribers will receive the new data
     this.totalPrice.next(totalPriceValue);
     this.totalQuantity.next(totalQuantityValue);
 
-    // log cart Data
-    this.logCartData(totalPriceValue,totalQuantityValue);
-
+    // log cart data just for debugging purposes
+    this.logCartData(totalPriceValue, totalQuantityValue);
   }
 
-  private logCartData(totalPriceValue: number, totalQuantityValue: number) {
-    console.log("Content of the Cart");
-    for (let tempCartItem of this.cartItems){
+  logCartData(totalPriceValue: number, totalQuantityValue: number) {
+
+    console.log('Contents of the cart');
+    for (let tempCartItem of this.cartItems) {
       const subTotalPrice = tempCartItem.quantity * tempCartItem.unitPrice;
-      console.log(`name: ${tempCartItem.name}, Quantity= ${tempCartItem.quantity},
-      unitPeice= ${ tempCartItem.unitPrice}, subTotalPrice= ${subTotalPrice}`);
+      console.log(`name: ${tempCartItem.name}, quantity=${tempCartItem.quantity}, unitPrice=${tempCartItem.unitPrice}, subTotalPrice=${subTotalPrice}`);
     }
-    console.log(`Total Price: ${totalPriceValue.toFixed(2)}, Total Quantity= ${totalQuantityValue},`);
-    console.log("-----");
+
+    console.log(`totalPrice: ${totalPriceValue.toFixed(2)}, totalQuantity: ${totalQuantityValue}`);
+    console.log('----');
+  }
+
+  decrementQuantity(theCartItem: CartItem) {
+
+    theCartItem.quantity--;
+
+    if (theCartItem.quantity === 0) {
+      this.remove(theCartItem);
+    }
+    else {
+      this.computeCartTotals();
+    }
+  }
+
+  remove(theCartItem: CartItem) {
+
+    // get index of item in the array
+    const itemIndex = this.cartItems.findIndex( tempCartItem => tempCartItem.id === theCartItem.id );
+
+    // if found, remove the item from the array at the given index
+    if (itemIndex > -1) {
+      this.cartItems.splice(itemIndex, 1);
+
+      this.computeCartTotals();
+    }
   }
 }
