@@ -34,7 +34,7 @@ export class CheckoutComponent implements OnInit {
         email: new FormControl(''),
       });
   */
-
+// tel: [null, [Validators.required, Validators.pattern('^[0-9]{12}$')]],
   constructor(private formBuilder: FormBuilder,
               private ecommFormService: EcommFormService) {
 
@@ -74,11 +74,24 @@ export class CheckoutComponent implements OnInit {
             EcomValidators.notOnlyWhiteSpace])
       }),
       billingAddress: this.formBuilder.group({
-        street: [''],
-        city: [''],
-        country: [''],
-        state: [''],
-        zipCode: ['']
+        street: new FormControl('',
+          [Validators.required,
+            Validators.minLength(2),
+            EcomValidators.notOnlyWhiteSpace]),
+
+        city: new FormControl('',
+          [Validators.required,
+            Validators.minLength(2),
+            EcomValidators.notOnlyWhiteSpace]),
+
+        country: new FormControl('', [Validators.required]),
+
+        state: new FormControl('', [Validators.required]),
+
+        zipCode: new FormControl('',
+          [Validators.required,
+            Validators.minLength(5),
+            EcomValidators.notOnlyWhiteSpace])
       }),
       creditCard: this.formBuilder.group({
         cardType: [''],
@@ -130,6 +143,15 @@ export class CheckoutComponent implements OnInit {
   get shippingAddressCountry(){ return this.checkoutFormGroup.get('shippingAddress.country'); }
   get shippingAddressState(){ return this.checkoutFormGroup.get('shippingAddress.state'); }
   get shippingAddressZipCode(){ return this.checkoutFormGroup.get('shippingAddress.zipCode'); }
+
+  // Billing form
+  get billingAddressStreet(){ return this.checkoutFormGroup.get('billingAddress.street'); }
+  get billingAddressCity(){ return this.checkoutFormGroup.get('billingAddress.city'); }
+  get billingAddressCountry(){ return this.checkoutFormGroup.get('billingAddress.country'); }
+  get billingAddressState(){ return this.checkoutFormGroup.get('billingAddress.state'); }
+  get billingAddressZipCode(){ return this.checkoutFormGroup.get('billingAddress.zipCode'); }
+
+
 
   onSubmit() {
     console.log("Handling the submit button");
