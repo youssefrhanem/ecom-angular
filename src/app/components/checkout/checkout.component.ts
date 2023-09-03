@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {EcommFormService} from "../../services/ecomm-form.service";
 import {Country} from "../../common/country";
 import {State} from "../../common/state";
+import {EcomValidators} from "../../validators/ecom-validators";
 
 
 @Component({
@@ -39,9 +40,18 @@ export class CheckoutComponent implements OnInit {
 
     this.checkoutFormGroup = this.formBuilder.group({
       customer: this.formBuilder.group({
-        firstName: [''],
-        lastName: [''],
-        email: [''],
+        firstName: new FormControl('',
+          [Validators.required,
+                        Validators.minLength(2),
+                        EcomValidators.notOnlyWhiteSpace]),
+        lastName: new FormControl('',
+          [Validators.required,
+                        Validators.minLength(2),
+                        EcomValidators.notOnlyWhiteSpace]),
+        email: ['',
+                 [Validators.required,
+                  Validators.email,
+                  Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')]]
       }),
       shippingAddress: this.formBuilder.group({
         street: [''],
@@ -96,10 +106,23 @@ export class CheckoutComponent implements OnInit {
     )
   }
 
+  get firstName(){ return this.checkoutFormGroup.get('customer.firstName'); }
+  get lastName(){ return this.checkoutFormGroup.get('customer.lastName'); }
+  get email(){ return this.checkoutFormGroup.get('customer.email'); }
+
   onSubmit() {
     console.log("Handling the submit button");
     console.log(this.checkoutFormGroup.get('customer')?.value);
     console.log("the email address : " + this.checkoutFormGroup.get('customer')?.value.email);
+    console.log("the shipping address country  : " + this.checkoutFormGroup.get('shippingAddress')?.value.country.name);
+    console.log("the shipping state  : " + this.checkoutFormGroup.get('shippingAddress')?.value.state.name);
+
+    // diplay all the eroor
+    if (this.checkoutFormGroup.invalid){
+      this.checkoutFormGroup.markAllAsTouched();
+    }
+    console.log("checkoutFormGroup is valid: " + this.checkoutFormGroup.valid)
+
   }
 
 
@@ -115,9 +138,15 @@ export class CheckoutComponent implements OnInit {
       const shippingAddress = this.checkoutFormGroup.get('shippingAddress');
       if (shippingAddress) {
         this.checkoutFormGroup.get('billingAddress')?.setValue(shippingAddress.value);
+
+        // TODO Bug fix code copy option select
+        this.billingAddressStates = this.shippingAddressStates;
       }
     } else {
       this.checkoutFormGroup.get('billingAddress')?.reset();
+
+      // TODO rest Bug Fix State
+      this.billingAddressStates = [];
     }
   }
 
@@ -148,7 +177,9 @@ export class CheckoutComponent implements OnInit {
 
     const formGroup = this.checkoutFormGroup.get(formGroupName);
     const countryCode = formGroup?.value.country.code;
+    const countryName = formGroup?.value.country.name;
     console.log(countryCode);
+    console.log(countryName)
 
     this.ecommFormService.getStates(countryCode).subscribe(
       data => {
