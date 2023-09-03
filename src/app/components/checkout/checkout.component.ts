@@ -94,12 +94,26 @@ export class CheckoutComponent implements OnInit {
             EcomValidators.notOnlyWhiteSpace])
       }),
       creditCard: this.formBuilder.group({
-        cardType: [''],
-        nameOnCard: [''],
-        cardNumber: [''],
-        securityCode: [''],
-        expirationMonth: [''],
-        expirationYear: ['']
+
+        cardType: new FormControl('',
+          [Validators.required]),
+
+        nameOnCard: new FormControl('',
+          [Validators.required,
+            Validators.minLength(2),
+            EcomValidators.notOnlyWhiteSpace]),
+
+        cardNumber: new FormControl('',
+          [Validators.required, Validators.pattern('[0-9]{16}')]),
+
+        securityCode: new FormControl('',
+          [Validators.required, Validators.pattern('[0-9]{3}')]),
+
+        expirationMonth: new FormControl('',
+          [Validators.required]),
+
+        expirationYear: new FormControl('',
+          [Validators.required]),
       }),
     });
 
@@ -151,6 +165,13 @@ export class CheckoutComponent implements OnInit {
   get billingAddressState(){ return this.checkoutFormGroup.get('billingAddress.state'); }
   get billingAddressZipCode(){ return this.checkoutFormGroup.get('billingAddress.zipCode'); }
 
+//
+  get  cardType() { return this.checkoutFormGroup.get('creditCard.cardType:'); }
+  get nameOnCard(){ return this.checkoutFormGroup.get('creditCard.nameOnCard'); }
+  get cardNumber(){ return this.checkoutFormGroup.get('creditCard.cardNumber'); }
+  get securityCode(){ return this.checkoutFormGroup.get('creditCard.securityCode'); }
+  get expirationMonth(){ return this.checkoutFormGroup.get('creditCard.expirationMonth'); }
+  get expirationYear(){ return this.checkoutFormGroup.get('creditCard.expirationYear'); }
 
 
   onSubmit() {
